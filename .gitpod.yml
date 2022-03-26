@@ -3,3 +3,4 @@ vscode:
   extensions:
     - Angular.ng-template
     - EditorConfig.EditorConfig
+    - esbenp.prettier-vscode
