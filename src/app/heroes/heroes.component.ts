@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
 
 import { HeroService } from '../hero.service';
-import { MessageService } from '../message.service';
 import { Hero } from '../hero';
+import { HeroesStore } from './heroes.store';
+import { ComponentStore } from '@ngrx/component-store';
+import { map } from 'rxjs';
 
 @Component({
   selector: 'app-heroes',
@@ -16,13 +18,13 @@ import { Hero } from '../hero';
         #heroName
       />
       <!-- (click) passes input value to add() and then clears the input -->
-      <button
+      <!-- <button
         type="button"
         class="add-button"
         (click)="add(heroName.value); heroName.value = ''"
       >
         Add hero
-      </button>
+      </button> -->
     </div>
 
     <ul class="heroes">
@@ -30,25 +32,28 @@ import { Hero } from '../hero';
         <a routerLink="/detail/{{ hero.id }}">
           <span class="badge">{{ hero.id }}</span> {{ hero.name }}
         </a>
-        <button
+        <!-- <button
           type="button"
           class="delete"
           title="delete hero"
           (click)="delete(hero)"
         >
           x
-        </button>
+        </button> -->
       </li>
     </ul>
   `,
   styleUrls: ['heroes.component.scss'],
+  providers: [HeroesStore],
 })
 export class HeroesComponent {
-  heroes$ = this.heroService.getHeroes();
+  readonly heroes$ = this.store.state$.pipe(
+    map((state) => state.heroes),
+  );
 
-  constructor(private heroService: HeroService) {}
+  constructor(private readonly store: HeroesStore) {}
 
-  add(name: string): void {
+  /*add(name: string): void {
     name = name.trim();
     if (!name) {
       return;
@@ -58,7 +63,7 @@ export class HeroesComponent {
     });
   }
 
-  delete(hero: Hero): void {
+  delete(hero: Hero) {
     this.heroService.deleteHero(hero.id).subscribe();
-  }
+  }*/
 }
